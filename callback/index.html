@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Connected · Hermes Publisher</title><link rel="stylesheet" href="../style.css"></head><body><main>
+<nav><a href="../">Home</a><a href="../privacy.html">Privacy Policy</a><a href="../terms.html">Terms of Service</a></nav>
+<h1 id="judul">TikTok sign-in</h1>
+<div class="card" id="isi"><p class="muted">Reading the response from TikTok…</p></div>
+<p class="muted">This page stores nothing and sends nothing anywhere: the code above exists only in your browser. It is single-use and expires in a few minutes. Give it to Hermes on the server to finish connecting the account.</p>
+<script>
+const q = new URLSearchParams(location.search), isi = document.getElementById("isi"), judul = document.getElementById("judul");
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+if (q.get("error")) {
+  judul.textContent = "Sign-in was not completed";
+  isi.innerHTML = `<p><b>${esc(q.get("error"))}</b></p><p>${esc(q.get("error_description") || "")}</p>`;
+} else if (q.get("code")) {
+  judul.textContent = "Account connected: one more step";
+  const kode = q.get("code"), state = q.get("state") || "";
+  isi.innerHTML = `<p>Copy this and paste it to Hermes:</p><span class="code" id="kode">${esc(kode)}${state ? " " + esc(state) : ""}</span><button id="salin">Copy</button>`;
+  document.getElementById("salin").onclick = async () => { await navigator.clipboard.writeText(document.getElementById("kode").textContent); document.getElementById("salin").textContent = "Copied"; };
+  history.replaceState(null, "", location.pathname);  // keep the code out of the history and address bar
+} else {
+  isi.innerHTML = "<p>This is the sign-in return page of Hermes Publisher. Open it through the TikTok sign-in link, not directly.</p>";
+}
+</script>
+</main></body></html>
